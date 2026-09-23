@@ -10,13 +10,13 @@ struct TimelineClip final {
 
 int main(int argc, char **argv) {
   if (argc != 3) {
-    std::cerr << "usage: postproject-cpp-nle-spike PRODUCTION MEDIA\n";
+    std::cerr << "usage: postproject-cpp-nle-validation PRODUCTION MEDIA\n";
     return 2;
   }
 
   try {
     auto production =
-        postproject::Production::create(argv[1], "C++ NLE spike");
+        postproject::Production::create(argv[1], "C++ NLE validation");
     auto transaction = production.beginTransaction();
     const auto asset_id = transaction.importMedia(argv[2], "Timeline clip");
     transaction.commit();
