@@ -5,6 +5,7 @@ on:
   pull_request:
   schedule:
     - cron: "13 3 * * 1"
+  workflow_call:
 
 jobs:
   test:
@@ -29,4 +30,3 @@ jobs:
       - run: cmake -S . -B build -DCMAKE_PREFIX_PATH="$PWD/postproject/target/install"
       - run: cmake --build build
       - run: ctest --test-dir build --output-on-failure
-
