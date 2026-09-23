@@ -1,0 +1,32 @@
+name: CI against PostProject main
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "13 3 * * 1"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: eseifert/postproject
+          ref: main
+          path: postproject
+      - uses: dtolnay/rust-toolchain@1.85.0
+      - run: cargo build --release --locked -p postproject-ffi
+        working-directory: postproject
+      - name: Install PostProject
+        run: |
+          cmake -S postproject -B postproject/target/package \
+            -DPOSTPROJECT_LIBRARY="$PWD/postproject/target/release/libpostproject.so" \
+            -DPOSTPROJECT_STATIC_LIBRARY="$PWD/postproject/target/release/libpostproject.a" \
+            -DCMAKE_INSTALL_PREFIX="$PWD/postproject/target/install"
+          cmake --install postproject/target/package
+      - run: cmake -S . -B build -DCMAKE_PREFIX_PATH="$PWD/postproject/target/install"
+      - run: cmake --build build
+      - run: ctest --test-dir build --output-on-failure
+
