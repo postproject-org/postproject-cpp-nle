@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          repository: eseifert/postproject-cpp-nle-spike
+          repository: eseifert/postproject-cpp-nle
       - uses: actions/checkout@v7
         with:
           repository: eseifert/postproject
