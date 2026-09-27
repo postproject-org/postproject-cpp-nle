@@ -16,25 +16,25 @@ int main(int argc, char **argv) {
 
   try {
     auto production =
-        postproject::Production::create(argv[1], "C++ NLE validation");
-    auto transaction = production.beginTransaction();
-    const auto asset_id = transaction.importMedia(argv[2], "Timeline clip");
-    transaction.commit();
+        postproject::Production::create(argv[1], "C++ NLE validation").value();
+    auto transaction = production.beginTransaction().value();
+    const auto asset_id = transaction.importMedia(argv[2], "Timeline clip").value();
+    transaction.commit().value();
 
-    const auto representations = production.representations(asset_id);
+    const auto representations = production.representations(asset_id).value();
     if (representations.size() != 1) {
       throw std::runtime_error("import did not produce one representation");
     }
     const postproject::HostObjectBinding binding{
-        production.id(),
+        production.id().value(),
         {postproject::ObjectKind::representation, representations[0].id}};
-    const TimelineClip clip{binding.toString(), argv[2]};
+    const TimelineClip clip{binding.toString().value(), argv[2]};
     if (!(postproject::HostObjectBinding::fromString(
-              clip.postproject_reference) == binding)) {
+              clip.postproject_reference).value() == binding)) {
       throw std::runtime_error("host binding did not round-trip");
     }
 
-    const auto resolutions = production.resolveAsset(asset_id);
+    const auto resolutions = production.resolveAsset(asset_id).value();
     if (resolutions.size() != 1 ||
         resolutions[0].availability !=
             postproject::RepresentationAvailability::online) {
