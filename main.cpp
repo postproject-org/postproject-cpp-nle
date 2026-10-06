@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
     }
     const postproject::HostObjectBinding binding{
         production.id().value(),
-        {postproject::ObjectKind::representation, representations[0].id}};
+        postproject::ObjectRef::representation(representations[0].id)};
     const TimelineClip clip{binding.toString().value(), argv[2]};
     if (!(postproject::HostObjectBinding::fromString(
               clip.postproject_reference).value() == binding)) {
