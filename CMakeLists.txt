@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 project(postproject_cpp_nle_validation LANGUAGES CXX)
 
-find_package(PostProject 0.3 REQUIRED CONFIG)
+find_package(PostProject 0.9 REQUIRED CONFIG)
 
 add_executable(postproject-cpp-nle-validation main.cpp)
 target_compile_features(postproject-cpp-nle-validation PRIVATE cxx_std_17)
