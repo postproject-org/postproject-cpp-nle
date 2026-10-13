@@ -18,16 +18,13 @@ int main(int argc, char **argv) {
     auto production =
         postproject::Production::create(argv[1], "C++ NLE validation").value();
     auto transaction = production.beginTransaction().value();
-    const auto asset_id = transaction.importMedia(argv[2], "Timeline clip").value();
+    const auto imported = transaction.importMedia(argv[2], "Timeline clip").value();
+    const auto asset_id = imported.asset_id;
     transaction.commit().value();
 
-    const auto representations = production.representations(asset_id).value();
-    if (representations.size() != 1) {
-      throw std::runtime_error("import did not produce one representation");
-    }
     const postproject::HostObjectBinding binding{
         production.id().value(),
-        postproject::ObjectRef::representation(representations[0].id)};
+        postproject::ObjectRef::representation(imported.representation_id)};
     const TimelineClip clip{binding.toString().value(), argv[2]};
     if (!(postproject::HostObjectBinding::fromString(
               clip.postproject_reference).value() == binding)) {
