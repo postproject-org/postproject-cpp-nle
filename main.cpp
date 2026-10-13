@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
   try {
     auto production =
         postproject::Production::create(argv[1], "C++ NLE validation").value();
-    auto transaction = production.beginTransaction().value();
+    auto transaction = production.edit().value();
     const auto imported = transaction.importMedia(argv[2], "Timeline clip").value();
     const auto asset_id = imported.asset_id;
     transaction.commit().value();
